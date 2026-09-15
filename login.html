@@ -1,0 +1,93 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cosmos Library</title>
+  <link rel="stylesheet" href="{% static 'css/login.css' %}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <script src="{% static 'js/auth.js' %}"></script>
+  <script src="{% static 'js/login.js' %}" defer></script>
+  
+</head>
+<body class="show-login">
+
+  <div class="bg-wrapper"></div>
+  <div id="stars"></div>
+  <div class="particles" id="particles"></div>
+
+  <!-- Toast container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Nav -->
+  <nav class="top-nav-glass">
+    <a class="nav-brand" href="{% url 'index' %}">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+      </svg>
+      CosmosLib
+    </a>
+    <a href="{% url 'index' %}" class="nav-home"><i class="fas fa-home"></i> Home</a>
+  </nav>
+
+  <!-- Cards slider -->
+  <div class="viewport">
+    <div class="slider-track">
+
+      <!-- Login (first) -->
+      <div class="card-login">
+        <h1>Welcome Back</h1>
+        <div class="form-group" id="login-email-group">
+          <i class="fas fa-envelope"></i>
+          <input type="email" id="login-email" placeholder="Email Address" />
+          <span class="error-message" id="login-email-error"></span>
+        </div>
+        <div class="form-group" id="login-password-group">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="login-password" placeholder="Password" />
+          <span class="error-message" id="login-password-error"></span>
+        </div>
+        <div class="forgot"><a href="{% url 'forgot_password' %}">Forgot Password?</a></div>
+        <button class="btn-submit" id="login-btn">Login</button>
+        <p class="switch-text">New here? <b onclick="showForm('register')">Create an account</b></p>
+      </div>
+
+      <!-- Register (second) -->
+      <div class="card-register">
+        <h1>Join Our Library</h1>
+        <div class="form-group" id="reg-username-group">
+          <i class="fas fa-user"></i>
+          <input type="text" id="reg-username" placeholder="Username" />
+          <span class="error-message" id="reg-username-error"></span>
+        </div>
+        <div class="form-group" id="reg-email-group">
+          <i class="fas fa-envelope"></i>
+          <input type="email" id="reg-email" placeholder="Email Address" />
+          <span class="error-message" id="reg-email-error"></span>
+        </div>
+        <div class="form-group" id="reg-password-group">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="reg-password" placeholder="Password (min 6 chars)" />
+          <span class="error-message" id="reg-password-error"></span>
+        </div>
+        <div class="form-group" id="reg-role-group">
+          <i class="fas fa-id-badge"></i>
+          <div class="select-wrapper">
+            <select id="reg-role" style="padding-left:42px">
+              <option value="" disabled selected>Register as:</option>
+              <option value="user">User</option>
+              <option value="admin">Admin</option>
+            </select>
+            <span class="chevron">▾</span>
+          </div>
+          <span class="error-message" id="reg-role-error"></span>
+        </div>
+        <button class="btn-submit" id="register-btn">Register Now</button>
+        <p class="switch-text">Already a member? <b onclick="showForm('login')">Sign In</b></p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

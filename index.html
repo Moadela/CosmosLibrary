@@ -1,0 +1,106 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CosmosLib</title>
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <link rel="stylesheet" href="{% static 'css/shared-nav.css' %}">
+    <script src="{% static 'js/auth.js' %}"></script>
+</head>
+
+<body>
+
+    <header>
+        <h2>CosmosLib</h2>
+        <nav>
+            <div class="topbar-right" id="home-nav-right" style="display:flex; align-items:center; gap: 12px;">
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Welcome to CosmosLib</h1>
+
+        <div class="line">
+            <p>
+                Knowledge opens doors to endless opportunities. Our Online Library gives you access
+                to a wide variety of books across different fields, helping you explore new topics
+                and discover what truly interests you.
+            </p>
+
+            <p>
+                You can easily browse, search, and find content that expands your understanding,
+                while also diving deeper into the areas you're passionate about.
+            </p>
+
+            <h3>What you can do:</h3>
+
+            <ul>
+                <li>Explore books from multiple categories</li>
+                <li>Find what you need quickly and easily</li>
+                <li>Learn at your own pace, anytime</li>
+            </ul>
+        </div>
+
+        <div class="bo">
+            <p>
+                Start your journey today and turn every page into a new step forward.
+            </p>
+            <a href="{% url 'books' %}" class="btn-browse">Browse Books</a>
+        </div>
+
+        <div class="slogan">
+            <p>© CosmosLib - You Have to Know Something About Everything and Everything About Some Thing.</p>
+        </div>
+
+        <section class="books-listing">
+            <img src="{% static 'p2.jpg' %}">
+            <img src="{% static 'p3.webp' %}">
+            <img src="{% static 'p4.webp' %}">
+            <img src="{% static 'p5.jpg' %}">
+        </section>
+    </main>
+
+    <footer>
+        <h3>Contact Us</h3>
+        <p>Email: li***@cosmoslib.com</p>
+        <p>Phone: +20 12587******</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const navRight = document.getElementById('home-nav-right');
+            const user = Auth.getCurrentUser();
+
+            if (user) {
+                const initials = Auth.getInitials(user.username);
+                const dashboardBtn = user.role === 'admin'
+                    ? `<a href="{% url 'dashboard' %}" style="color: #15b8b8; text-decoration: none; margin-left: 15px; padding: 8px 15px; background: rgba(21, 184, 184, 0.2); border-radius: 5px; font-size: 14px; transition: 0.3s;">Dashboard</a>`
+                    : '';
+
+                navRight.innerHTML = `
+                    <a href="{% url 'books' %}" style="color: white; text-decoration: none; margin-left: 15px; padding: 8px 15px; background: rgba(21, 184, 184, 0.2); border-radius: 5px; font-size: 14px; transition: 0.3s;">Books</a>
+                    ${dashboardBtn}
+                    <a href="{% url 'profile' %}" style="color: white; text-decoration: none; margin-left: 15px; padding: 8px 15px; background: rgba(21, 184, 184, 0.2); border-radius: 5px; font-size: 14px; transition: 0.3s;">${user.username}</a>
+                    <a href="#" id="home-logout-btn" style="color: white; text-decoration: none; margin-left: 15px; padding: 8px 15px; background: rgba(239, 68, 68, 0.3); border-radius: 5px; font-size: 14px; transition: 0.3s;">Logout</a>
+                `;
+
+                document.getElementById('home-logout-btn').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    Auth.logout();
+                });
+            } else {
+                navRight.innerHTML = `
+                    <a href="{% url 'login_page' %}#login" style="color: white; text-decoration: none; margin-left: 15px; padding: 8px 15px; background: rgba(21, 184, 184, 0.2); border-radius: 5px; font-size: 14px; transition: 0.3s;">Login</a>
+                    <a href="{% url 'login_page' %}#register" style="color: white; text-decoration: none; margin-left: 15px; padding: 8px 15px; background: rgba(21, 184, 184, 0.2); border-radius: 5px; font-size: 14px; transition: 0.3s;">Sign Up</a>
+                `;
+            }
+        });
+    </script>
+
+</body>
+
+</html>

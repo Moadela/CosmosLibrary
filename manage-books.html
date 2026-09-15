@@ -1,0 +1,88 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Books - CosmosLib Admin</title>
+
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+
+<body class="dashboard-body">
+
+    <div class="dashboard-container">
+
+
+        <nav class="top-nav-glass">
+            <div class="nav-brand">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                </svg>
+                CosmosLib
+            </div>
+            <div class="nav-links">
+                <a href="{% url 'dashboard' %}">Overview</a>
+                <a href="{% url 'manage_books' %}" class="active">Manage Books</a>
+                <a href="{% url 'manage_users' %}">Manage Users</a>
+                <a href="{% url 'add_book' %}">Add Book</a>
+                <a href="{% url 'books' %}" target="_blank" style="color: var(--primary);">View Public Site</a>
+            </div>
+            <div class="topbar-right" style="display:flex; align-items:center;">
+                <!-- Populated dynamically by auth.js -->
+            </div>
+        </nav>
+
+
+        <main>
+            <div class="page-header">
+                <div>
+                    <h1>Manage Books</h1>
+                    <p>View, edit, or delete existing library books.</p>
+                </div>
+
+                <a href="{% url 'add_book' %}" class="btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    Add New Book
+                </a>
+            </div>
+
+            <div class="panel">
+                <div class="panel-body">
+                    <table class="dashboard-table" id="all-books-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Author</th>
+                                <th>Category</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="6" style="text-align: center; color: #94A3B8; padding: 20px;">
+                                    Loading books data...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+
+    <script src="{% static 'js/auth.js' %}"></script>
+    <script src="{% static 'js/dashboard.js' %}"></script>
+</body>
+
+</html>

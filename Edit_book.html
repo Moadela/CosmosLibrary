@@ -1,0 +1,369 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Book - CosmosLib Admin</title>
+
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <script src="{% static 'js/auth.js' %}"></script>
+    <style>
+        .select-book-container {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        #edit-book-form {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="dashboard-body">
+
+    <div class="dashboard-container">
+
+
+        <nav class="top-nav-glass">
+            <div class="nav-brand">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                </svg>
+                CosmosLib
+            </div>
+            <div class="nav-links">
+                <a href="{% url 'dashboard' %}">Overview</a>
+                <a href="{% url 'manage_books' %}" class="active">Manage Books</a>
+                <a href="{% url 'manage_users' %}">Manage Users</a>
+                <a href="{% url 'add_book' %}">Add Book</a>
+                <a href="{% url 'books' %}" target="_blank" style="color: var(--primary);">View Public Site</a>
+            </div>
+            <div class="topbar-right" style="display:flex; align-items:center;">
+                <!-- Populated dynamically by auth.js -->
+            </div>
+        </nav>
+
+
+        <main>
+            <div class="page-header">
+                <div>
+                    <h1>Edit Book</h1>
+                    <p>Modify existing records in the library system.</p>
+                </div>
+            </div>
+
+            <div class="form-container">
+                <div class="select-book-container">
+                    <div class="form-group">
+                        <label for="book-selector">Select a book to edit</label>
+                        <select id="book-selector">
+                            <option value="">-- Choose a Book --</option>
+                            <!-- Options populated by JS -->
+                        </select>
+                    </div>
+                </div>
+
+                <form id="edit-book-form">
+                    <input type="hidden" id="edit-book-id">
+
+                    <div class="form-group">
+                        <label for="edit-book-title">Book Title</label>
+                        <input type="text" id="edit-book-title" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-book-author">Author Name</label>
+                        <input type="text" id="edit-book-author" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-book-category">Category</label>
+                        <select id="edit-book-category" required>
+                            <option value="Romantic">Romantic</option>
+                            <option value="Historic">Historic</option>
+                            <option value="Programming">Programming</option>
+                            <option value="Religious">Religious</option>
+                            <option value="General">General Fiction</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-book-year">Publication Year</label>
+                        <input type="number" id="edit-book-year" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-book-pages">Pages</label>
+                        <input type="number" id="edit-book-pages">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-book-language">Language</label>
+                        <input type="text" id="edit-book-language">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-book-price">Price ($)</label>
+                        <input type="number" id="edit-book-price" step="0.01">
+                    </div>
+
+                    <div class="form-group" style="grid-column: 1 / -1; width: 100%;">
+                        <label for="edit-book-description">Description</label>
+                        <textarea id="edit-book-description" rows="3" style="width: 100%; border-radius: 5px; padding: 10px; background: rgba(255, 255, 255, 0.05); color: white; border: 1px solid rgba(255, 255, 255, 0.1); font-family: inherit; font-size: inherit;"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-book-status">Status</label>
+                        <select id="edit-book-status">
+                            <option value="Available">Available</option>
+                            <option value="Borrowed">Borrowed</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Update Book Cover</label>
+                        <div class="cover-upload-container" id="edit-cover-upload-container" onclick="document.getElementById('edit-book-cover').click()">
+                            <div class="cover-upload-placeholder" id="edit-cover-upload-placeholder">
+                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                                <span>Upload New Cover</span>
+                            </div>
+                            <img id="current-cover-preview" class="cover-preview" src="" alt="Cover Preview" style="display: none;">
+                            <input type="file" id="edit-book-cover" accept="image/*" style="display: none;">
+                        </div>
+                        <small style="color: var(--text-muted); display: block; margin-top: 8px; text-align: center;">Leave empty to keep current cover</small>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 20px;">
+                        <label>Update Book PDF</label>
+                        <div class="cover-upload-container" id="edit-pdf-upload-container" onclick="document.getElementById('edit-book-pdf').click()" style="height: 100px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                            <div class="cover-upload-placeholder" id="edit-pdf-upload-placeholder">
+                                <span>Upload New PDF</span>
+                            </div>
+                            <div id="edit-pdf-preview" style="display: none; width: 100%; height: 100%; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); border-radius: 8px;">
+                                <span id="edit-pdf-filename" style="color: white; font-weight: 500; font-size: 0.9rem; text-align: center; word-break: break-all; padding: 0 10px;"></span>
+                            </div>
+                            <input type="file" id="edit-book-pdf" accept="application/pdf" style="display: none;">
+                        </div>
+                        <small style="color: var(--text-muted); display: block; margin-top: 8px; text-align: center;">Leave empty to keep current PDF</small>
+                    </div>
+
+                    <button type="submit" class="btn-submit">Update Book Details</button>
+                    <a href="{% url 'manage_books' %}"
+                        style="display:block; text-align:center; margin-top:15px; color:var(--text-muted); text-decoration:none; font-size:14px;">Cancel
+                        and return</a>
+                </form>
+            </div>
+
+        </main>
+    </div>
+
+
+    <script src="{% static 'js/dashboard.js' %}"></script>
+    <script>
+        if (typeof Auth !== 'undefined' && !Auth.requireAdmin()) {
+            document.body.innerHTML = '';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const selector = document.getElementById('book-selector');
+            const form = document.getElementById('edit-book-form');
+
+            const titleInput = document.getElementById('edit-book-title');
+            const authorInput = document.getElementById('edit-book-author');
+            const categoryInput = document.getElementById('edit-book-category');
+            const statusInput = document.getElementById('edit-book-status');
+            const yearInput = document.getElementById('edit-book-year');
+            const pagesInput = document.getElementById('edit-book-pages');
+            const languageInput = document.getElementById('edit-book-language');
+            const priceInput = document.getElementById('edit-book-price');
+            const descriptionInput = document.getElementById('edit-book-description');
+            const idInput = document.getElementById('edit-book-id');
+
+
+            let books = [];
+            Auth.apiFetch('/books/').then(r => r.json()).then(data => {
+                books = data;
+                if (books.length > 0) {
+                    books.forEach(b => {
+                        const opt = document.createElement('option');
+                        opt.value = b.id;
+                        opt.textContent = `[#${b.id}] ${b.title} by ${b.author}`;
+                        selector.appendChild(opt);
+                    });
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const passedId = urlParams.get('id');
+                    if (passedId) {
+                        selector.value = passedId;
+                        selector.dispatchEvent(new Event('change'));
+                    }
+                } else {
+                    selector.innerHTML = '<option value="">No books available to edit</option>';
+                    selector.disabled = true;
+                }
+            });
+
+
+            selector.addEventListener('change', (e) => {
+                const selectedId = e.target.value;
+                if (!selectedId) {
+                    form.style.display = 'none';
+                    return;
+                }
+
+                const book = books.find(b => b.id.toString() === selectedId);
+                if (book) {
+
+                    idInput.value = book.id;
+                    titleInput.value = book.title;
+                    authorInput.value = book.author;
+                    categoryInput.value = book.category || 'General';
+                    yearInput.value = book.year || '';
+                    pagesInput.value = book.pages || '';
+                    languageInput.value = book.language || '';
+                    priceInput.value = book.price || '';
+                    descriptionInput.value = book.description || '';
+                    statusInput.value = book.status || 'Available';
+
+                    const preview = document.getElementById('current-cover-preview');
+                    const placeholder = document.getElementById('edit-cover-upload-placeholder');
+                    if (book.image) {
+                        preview.src = book.image;
+                        preview.style.display = 'block';
+                        placeholder.style.display = 'none';
+                    } else {
+                        preview.style.display = 'none';
+                        preview.src = '';
+                        placeholder.style.display = 'flex';
+                    }
+
+                    const pdfPlaceholder = document.getElementById('edit-pdf-upload-placeholder');
+                    const pdfPreview = document.getElementById('edit-pdf-preview');
+                    const pdfFilenameSpan = document.getElementById('edit-pdf-filename');
+                    
+                    if (book.pdf) {
+                        pdfPlaceholder.style.display = 'none';
+                        pdfPreview.style.display = 'flex';
+                        pdfFilenameSpan.textContent = "Current PDF Attached";
+                    } else {
+                        pdfPlaceholder.style.display = 'flex';
+                        pdfPreview.style.display = 'none';
+                        pdfFilenameSpan.textContent = "";
+                    }
+
+                    form.style.display = 'block';
+                }
+            });
+
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const idToUpdate = idInput.value;
+                if (!idToUpdate) return;
+                
+                const coverInput = document.getElementById('edit-book-cover');
+                const pdfInput = document.getElementById('edit-book-pdf');
+
+                const updateAndRedirect = async (imageUrl, pdfUrl) => {
+                    const payload = {
+                        title: titleInput.value,
+                        author: authorInput.value,
+                        category: categoryInput.value,
+                        status: statusInput.value,
+                        year: yearInput.value ? parseInt(yearInput.value) : null,
+                        pages: pagesInput.value ? parseInt(pagesInput.value) : null,
+                        language: languageInput.value,
+                        price: priceInput.value ? parseFloat(priceInput.value) : null,
+                        description: descriptionInput.value
+                    };
+                    if (imageUrl) payload.image = imageUrl;
+                    if (pdfUrl) payload.pdf = pdfUrl;
+
+                    try {
+                        const res = await Auth.apiFetch(`/books/${idToUpdate}/`, {
+                            method: 'PATCH',
+                            body: JSON.stringify(payload)
+                        });
+                        if (res.ok) {
+                            alert('Book updated successfully!');
+                            window.location.href = "{% url 'manage_books' %}";
+                        } else {
+                            alert('Failed to update book.');
+                        }
+                    } catch(err) {
+                        alert('Error updating book.');
+                    }
+                };
+
+                let imageUrl = null;
+                let pdfUrl = null;
+
+                const processPdf = () => {
+                    if (pdfInput && pdfInput.files && pdfInput.files[0]) {
+                        const reader = new FileReader();
+                        reader.onload = function(evt) {
+                            pdfUrl = evt.target.result;
+                            updateAndRedirect(imageUrl, pdfUrl);
+                        };
+                        reader.readAsDataURL(pdfInput.files[0]);
+                    } else {
+                        updateAndRedirect(imageUrl, null);
+                    }
+                };
+
+                if (coverInput.files && coverInput.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(evt) {
+                        imageUrl = evt.target.result;
+                        processPdf();
+                    };
+                    reader.readAsDataURL(coverInput.files[0]);
+                } else {
+                    processPdf();
+                }
+            });
+
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const passedId = urlParams.get('id');
+            if (passedId) {
+                selector.value = passedId;
+                selector.dispatchEvent(new Event('change'));
+            }
+
+            document.getElementById('edit-book-cover').addEventListener('change', function (e) {
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const preview = document.getElementById('current-cover-preview');
+                        preview.src = event.target.result;
+                        preview.style.display = 'block';
+                        document.getElementById('edit-cover-upload-placeholder').style.display = 'none';
+                    };
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+
+            document.getElementById('edit-book-pdf').addEventListener('change', function () {
+                if (this.files && this.files[0]) {
+                    const preview = document.getElementById('edit-pdf-preview');
+                    const placeholder = document.getElementById('edit-pdf-upload-placeholder');
+                    const filenameSpan = document.getElementById('edit-pdf-filename');
+                    
+                    filenameSpan.textContent = this.files[0].name;
+                    preview.style.display = 'flex';
+                    placeholder.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
